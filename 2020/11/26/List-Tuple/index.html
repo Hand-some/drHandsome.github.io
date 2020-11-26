@@ -23,30 +23,35 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
   </script>
-<meta name="description" content="我们常常高估一天所能做的事，却低估一年所能做的事">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Gary&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="Python List和Tuple之间的区别速览本文主要回答如下问题：  List和Tuple之间的区别 List的内存分配机制  List与Tuple主要区别：  List为动态数组，可变，可重设长度 Tuple为静态数组，不可变，内部数据创建后就固定 Tuple在Python的运行时环境下缓存，每次使用时不需要访问内核来为其分配内存  在设计哲学上，列表偏向于保存一系列独立可变的数据对象，元组">
+<meta property="og:type" content="article">
+<meta property="og:title" content="List&amp;Tuple">
+<meta property="og:url" content="http://yoursite.com/2020/11/26/List-Tuple/index.html">
 <meta property="og:site_name" content="Gary&#39;s blog">
-<meta property="og:description" content="我们常常高估一天所能做的事，却低估一年所能做的事">
+<meta property="og:description" content="Python List和Tuple之间的区别速览本文主要回答如下问题：  List和Tuple之间的区别 List的内存分配机制  List与Tuple主要区别：  List为动态数组，可变，可重设长度 Tuple为静态数组，不可变，内部数据创建后就固定 Tuple在Python的运行时环境下缓存，每次使用时不需要访问内核来为其分配内存  在设计哲学上，列表偏向于保存一系列独立可变的数据对象，元组">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/11/26/List-Tuple/over_allocate.jpg">
+<meta property="article:published_time" content="2020-11-26T14:32:24.000Z">
+<meta property="article:modified_time" content="2020-11-26T15:05:52.833Z">
 <meta property="article:author" content="天降青蛙雨">
+<meta property="article:tag" content="Python | High Performance">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/11/26/List-Tuple/over_allocate.jpg">
 
 
-<link rel="canonical" href="http://yoursite.com/">
+<link rel="canonical" href="http://yoursite.com/2020/11/26/List-Tuple/">
 
 
 <script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
-<title>Gary's blog</title>
+<title>List&Tuple | Gary's blog</title>
   
 
 
@@ -168,7 +173,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -181,6 +186,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-List%E5%92%8CTuple%E4%B9%8B%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.</span> <span class="nav-text">Python List和Tuple之间的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9F%E8%A7%88"><span class="nav-number">1.1.</span> <span class="nav-text">速览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#List%E4%B8%8ETuple"><span class="nav-number">1.2.</span> <span class="nav-text">List与Tuple</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%95%B0%E7%BB%84-List"><span class="nav-number">1.2.1.</span> <span class="nav-text">动态数组 List</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E6%95%B0%E7%BB%84-Tuple"><span class="nav-number">1.2.2.</span> <span class="nav-text">静态数组 Tuple</span></a></li></ol></li></ol></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -248,9 +254,10 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
@@ -270,9 +277,9 @@
       <meta itemprop="name" content="Gary's blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/11/26/List-Tuple/" class="post-title-link" itemprop="url">List&Tuple</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          List&Tuple
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -305,7 +312,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h2 id="Python-List和Tuple之间的区别"><a href="#Python-List和Tuple之间的区别" class="headerlink" title="Python List和Tuple之间的区别"></a>Python List和Tuple之间的区别</h2><h3 id="速览"><a href="#速览" class="headerlink" title="速览"></a>速览</h3><p>本文主要回答如下问题：</p>
+        <h2 id="Python-List和Tuple之间的区别"><a href="#Python-List和Tuple之间的区别" class="headerlink" title="Python List和Tuple之间的区别"></a>Python List和Tuple之间的区别</h2><h3 id="速览"><a href="#速览" class="headerlink" title="速览"></a>速览</h3><p>本文主要回答如下问题：</p>
 <ul>
 <li>List和Tuple之间的区别</li>
 <li>List的内存分配机制</li>
@@ -331,7 +338,6 @@
 <p>虽然每次超额分配的空间不算特别多，但是如果累加起来往往不可忽略。例如我们维护1000000个列表，每个列表有4个元素，通常我们会假设其大致占用了4000000个元素内存，如果当这些列表都使用一次append方法时，实际会大致占用到8000000个元素内存;同样，一个含有100000000个元素的大列表实际分配对空间可能是112500007个。这种差异往往会在追求高性能时带来障碍。</p>
 <h4 id="静态数组-Tuple"><a href="#静态数组-Tuple" class="headerlink" title="静态数组 Tuple"></a>静态数组 Tuple</h4><p>元组是固定不可变的，但可以通过两个元组合并成一个新元组，并且不需要为其分配<strong>额外</strong>的存储空间</p>
 
-      
     </div>
 
     
@@ -339,11 +345,16 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          <div class="post-tags">
+              <a href="/tags/Python-High-Performance/" rel="tag"># Python | High Performance</a>
+          </div>
+
+        
+
     </footer>
   </article>
 </div>
+
 
 
 
