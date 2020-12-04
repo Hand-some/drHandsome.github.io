@@ -23,18 +23,23 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Mist","version":"8.0.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
   </script>
-<meta name="description" content="我们常常高估一天所能做的事，却低估一年所能做的事">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Gary&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+<meta name="description" content="代码解析变量   变量名 所在类 作用 定义文件    函数   函数名 参数 所在类 作用 定义文件    parse_DIMACS gzFile input_stream, Solver &amp;S  CNF数据文件解析接口 ParseUtils.h   parse_DIMACS_main B &amp;in, Solver &amp;S  CNF数据文件解析，得到vars、clauses数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Glucose代码细节">
+<meta property="og:url" content="http://yoursite.com/2020/12/04/Glucose%E4%BB%A3%E7%A0%81%E7%BB%86%E8%8A%82/index.html">
 <meta property="og:site_name" content="Gary&#39;s blog">
-<meta property="og:description" content="我们常常高估一天所能做的事，却低估一年所能做的事">
+<meta property="og:description" content="代码解析变量   变量名 所在类 作用 定义文件    函数   函数名 参数 所在类 作用 定义文件    parse_DIMACS gzFile input_stream, Solver &amp;S  CNF数据文件解析接口 ParseUtils.h   parse_DIMACS_main B &amp;in, Solver &amp;S  CNF数据文件解析，得到vars、clauses数">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-04T05:11:58.000Z">
+<meta property="article:modified_time" content="2020-12-04T05:14:03.686Z">
 <meta property="article:author" content="天降青蛙雨">
+<meta property="article:tag" content="Glucose">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="SAT">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://yoursite.com/archives/">
+<link rel="canonical" href="http://yoursite.com/2020/12/04/Glucose%E4%BB%A3%E7%A0%81%E7%BB%86%E8%8A%82/">
 
 
 <script class="page-configurations">
@@ -42,11 +47,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
-<title>归档 | Gary's blog</title>
+<title>Glucose代码细节 | Gary's blog</title>
   
 
 
@@ -168,7 +173,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -181,6 +186,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <section class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">代码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-number">1.1.</span> <span class="nav-text">变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.</span> <span class="nav-text">函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8F%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.</span> <span class="nav-text">宏定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E5%AE%83"><span class="nav-number">1.4.</span> <span class="nav-text">其它</span></a></li></ol></li></ol></div>
         </section>
         <!--/noindex-->
 
@@ -248,69 +254,132 @@
 </noscript>
 
 
-    <div class="main-inner archive posts-collapse">
+    <div class="main-inner post posts-expand">
 
 
   
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 2 篇日志。 继续努力。</span>
-      </div>
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/04/Glucose%E4%BB%A3%E7%A0%81%E7%BB%86%E8%8A%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/photo.jpg">
+      <meta itemprop="name" content="天降青蛙雨">
+      <meta itemprop="description" content="我们常常高估一天所能做的事，却低估一年所能做的事">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Gary's blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Glucose代码细节
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+
+      <time title="创建时间：2020-12-04 13:11:58 / 修改时间：13:14:03" itemprop="dateCreated datePublished" datetime="2020-12-04T13:11:58+08:00">2020-12-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/SAT-solver/" itemprop="url" rel="index"><span itemprop="name">SAT solver</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h2 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h2><h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>所在类</th>
+<th>作用</th>
+<th>定义文件</th>
+</tr>
+</thead>
+</table>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>参数</th>
+<th>所在类</th>
+<th>作用</th>
+<th>定义文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>parse_DIMACS</td>
+<td>gzFile input_stream, Solver &amp;S</td>
+<td></td>
+<td>CNF数据文件解析接口</td>
+<td>ParseUtils.h</td>
+</tr>
+<tr>
+<td>parse_DIMACS_main</td>
+<td>B &amp;in, Solver &amp;S</td>
+<td></td>
+<td>CNF数据文件解析，得到vars、clauses数量，并调用readClause读取每一个clause，调用addClause_保存数据</td>
+<td>ParseUtils.h</td>
+</tr>
+</tbody></table>
+<h3 id="宏定义"><a href="#宏定义" class="headerlink" title="宏定义"></a>宏定义</h3><h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-04T13:11:58+08:00"
-              content="2020-12-04">
-          12-04
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/12/04/Glucose%E4%BB%A3%E7%A0%81%E7%BB%86%E8%8A%82/" itemprop="url">
-            <span itemprop="name">Glucose代码细节</span>
-          </a>
-      </div>
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Glucose/" rel="tag"># Glucose</a>
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/SAT/" rel="tag"># SAT</a>
+          </div>
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/11/26/List-Tuple/" rel="prev" title="List&Tuple">
+                  <i class="fa fa-chevron-left"></i> List&Tuple
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-11-26T22:32:24+08:00"
-              content="2020-11-26">
-          11-26
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/11/26/List-Tuple/" itemprop="url">
-            <span itemprop="name">List&Tuple</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
+</div>
 
 
-    </div>
-  </div>
-  
-  
-  
+
+
+
 
 
 <script>
